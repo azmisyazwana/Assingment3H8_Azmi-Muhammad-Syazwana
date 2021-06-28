@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas 3</title>
+    <style>
+        table, th, td{
+            border: 1px solid black
+        } 
+
+        p{
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>DATA COVID 19 INDONESIA</h1>
+    <p id="pos"></p>
+    <p id="sem"></p>
+    <p id="men"></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Provinsi</th>
+                <th>Positif</th>
+                <th>Sembuh</th>
+                <th>Meninggal</th>
+            </tr>
+        </thead>
+        <tbody id="data-tabel">
+            
+        </tbody>
+    </table>
+
+    <script>
+        function updateData(){
+            fetch("http://indonesia-covid19.mathdro.id/api/provinsi").then(function(response){
+                return response.json()
+            }).then(function(data){
+                console.log(data)
+                console.log(data.data)
+                console.log(data.__proto__)
+                console.log(data.data[1])
+                console.log(data.data[1].kasusPosi)
+                
+                data.data.forEach(addData)
+            
+                let sumPos = 0;
+                let sumSem = 0;
+                let sumMen = 0;
+                data.data.forEach((item) =>{
+                    sumPos += item.kasusPosi
+                    sumSem += item.kasusSemb
+                    sumMen += item.kasusMeni
+                
+                    document.getElementById("pos").innerHTML = `Positif: ${sumPos}` 
+                    document.getElementById("sem").innerHTML = `Sembuh: ${sumSem}`
+                    document.getElementById("men").innerHTML = `Meninggal: ${sumMen}`
+                
+                })                
+                
+            })
+        }
+
+        function addData(item){
+            const dataTabel = document.getElementById("data-tabel")
+
+            dataTabel.innerHTML +=
+            `<tr>
+                <td>${item.provinsi}</td>
+                <td>${item.kasusPosi}</td>
+                <td>${item.kasusSemb}</td>
+                <td>${item.kasusMeni}</td>
+            </tr>`
+        }
+        updateData()
+    </script>
+</body>
+</html>
